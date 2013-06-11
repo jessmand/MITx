@@ -48,7 +48,7 @@
 
 .button:active {
     background-color:#AAAAAA;
-    -webkit-box-shadow: inset -2px -4px 6px #777777;
+    -webkit-box-shadow: inset 2px 4px 6px #777777;
 }
 
 #leftColumn {
@@ -67,4 +67,8 @@
 
 #tallButton {
     height:120px;
+}
+
+#period {
+    font-weight:bold;
 }

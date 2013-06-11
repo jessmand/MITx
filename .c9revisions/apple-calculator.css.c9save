@@ -475,3 +475,9 @@
 {"ts":1370976611592,"patch":[[{"diffs":[[0,"px -4px "],[-1,"10"],[1,"6"],[0,"px #7777"]],"start1":1295,"start2":1295,"length1":18,"length2":17}]],"length":1499,"saved":false}
 {"ts":1370976793157,"patch":[[{"diffs":[[0,"#c"],[-1,"ontainer"],[1,"alcula"],[0," {\n "]],"start1":0,"start2":0,"length1":14,"length2":12}]],"length":1497,"saved":false}
 {"ts":1370976794203,"patch":[[{"diffs":[[0,"#calcula"],[1,"tor"],[0," {\n    w"]],"start1":0,"start2":0,"length1":16,"length2":19}]],"length":1500,"saved":false}
+{"ts":1370978565418,"patch":[[{"diffs":[[0,"et -2px "],[-1,"-"],[0,"4px 6px "]],"start1":1291,"start2":1291,"length1":17,"length2":16}]],"length":1499,"saved":false}
+{"ts":1370978566406,"patch":[[{"diffs":[[0,": inset "],[-1,"-"],[0,"2px 4px "]],"start1":1286,"start2":1286,"length1":17,"length2":16}]],"length":1498,"saved":false}
+{"ts":1370981767011,"patch":[[{"diffs":[[0,"ght:120px;\n}"],[1,"\n\n#period "]],"start1":1486,"start2":1486,"length1":12,"length2":22}]],"length":1508,"saved":false}
+{"ts":1370981768309,"patch":[[{"diffs":[[0,"#period "],[1,"{\n    \n}"]],"start1":1500,"start2":1500,"length1":8,"length2":16}]],"length":1516,"saved":false}
+{"ts":1370981770515,"patch":[[{"diffs":[[0,"d {\n    "],[1,"font-weight"],[0,"\n}"]],"start1":1506,"start2":1506,"length1":10,"length2":21}]],"length":1527,"saved":false}
+{"ts":1370981772366,"patch":[[{"diffs":[[0,"t-weight"],[1,":bold;"],[0,"\n}"]],"start1":1517,"start2":1517,"length1":10,"length2":16}]],"length":1533,"saved":false}
