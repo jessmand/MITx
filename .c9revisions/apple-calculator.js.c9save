@@ -320,3 +320,10 @@
 {"ts":1370981684475,"patch":[[{"diffs":[[0,"ession')"],[1,".text"],[0,"\r\n      "]],"start1":3352,"start2":3352,"length1":16,"length2":21}]],"length":3691,"saved":false}
 {"ts":1370981685406,"patch":[[{"diffs":[[0,"n').text"],[1,"(\"\")"],[0,"\r\n      "]],"start1":3357,"start2":3357,"length1":16,"length2":20}]],"length":3695,"saved":false}
 {"ts":1370981688417,"patch":[[{"diffs":[[0,"text(\"\")"],[1,";"],[0,"\r\n      "]],"start1":3361,"start2":3361,"length1":16,"length2":17}]],"length":3696,"saved":false}
+{"ts":1370981961525,"patch":[[{"diffs":[[0,"    "],[-1,"switch ("],[1,"if"],[0,"func"]],"start1":3056,"start2":3056,"length1":16,"length2":10}]],"length":3690,"saved":false}
+{"ts":1370981962752,"patch":[[{"diffs":[[0,"      if"],[1,"("],[0,"func) {\r"]],"start1":3054,"start2":3054,"length1":16,"length2":17}]],"length":3691,"saved":false}
+{"ts":1370981968534,"patch":[[{"diffs":[[0," if(func"],[1," == \"=\""],[0,") {\r\n   "]],"start1":3059,"start2":3059,"length1":16,"length2":23}]],"length":3698,"saved":false}
+{"ts":1370981984635,"patch":[[{"diffs":[[0,"    "],[-1,"if(func == \"=\""],[1,"switch (func"],[0,") {\r"]],"start1":3056,"start2":3056,"length1":22,"length2":20},{"diffs":[[0,"text(\"\")"],[-1,";"],[0,"\r\n      "]],"start1":3361,"start2":3361,"length1":17,"length2":16}]],"length":3695,"saved":false}
+{"ts":1370981986716,"patch":[[{"diffs":[[0,"text(\"\")"],[1,";"],[0,"\r\n      "]],"start1":3361,"start2":3361,"length1":16,"length2":17}]],"length":3696,"saved":false}
+{"ts":1370981992520,"patch":[[{"diffs":[[0,"k;\r\n"],[-1,"            case \"±\":\r\n                break;\r\n"],[0,"    "]],"start1":3392,"start2":3392,"length1":55,"length2":8}]],"length":3649,"saved":false}
+{"ts":1370981995001,"patch":[[{"diffs":[[0," {\r\n"],[-1,"            case \"MC\":\r\n                console.log(\"MC\");\r\n                break;\r\n            case \"M+\":\r\n                break;\r\n            case \"M-\":\r\n                break;\r\n            case \"MR\":\r\n                break;\r\n"],[0,"    "]],"start1":3073,"start2":3073,"length1":236,"length2":8}]],"length":3421,"saved":false}

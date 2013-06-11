@@ -104,19 +104,8 @@ $(document).ready(function() {
     $('.button').bind('click',function() {
         var func = $(this).html();
         switch (func) {
-            case "MC":
-                console.log("MC");
-                break;
-            case "M+":
-                break;
-            case "M-":
-                break;
-            case "MR":
-                break;
             case "C":
                 $('#expression').text("");
-                break;
-            case "±":
                 break;
             case "=":
                 break;
