@@ -9,24 +9,30 @@
 #screen {
     width: 364px;
     height: 88px;
-    position:relative;
-    text-align:right;
     margin:15px 25px 20px 25px;
     background-color: #F0FBC8;
     border-radius: 8px;
-    font-size:28px;
-    font-weight:600;
     padding-right:5px;
     padding-left:5px;
-    line-height:38px;
-    text-shadow: 0px 1px 0px #747474;
     -webkit-box-shadow: inset 0 3px 8px #AFB592, 0 4px 6px #FFFFFF, -3px -3px 3px #888, 3px -3px 3px #888;
 }
 
 #expression {
     height:88px;
-    overflow-y:auto;
-    word-wrap:break-word;
+    width:364px;
+    line-height:38px;
+    text-shadow: 0px 1px 0px #747474;
+    text-align:right;
+    font-size:28px;
+    font-weight:600;
+    background: transparent;
+    border: none;
+    font-family: "Verdana";
+    resize:none;
+}
+
+#expression:focus {
+    outline:0;
 }
 
 .row {

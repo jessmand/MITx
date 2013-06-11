@@ -327,3 +327,7 @@
 {"ts":1370981986716,"patch":[[{"diffs":[[0,"text(\"\")"],[1,";"],[0,"\r\n      "]],"start1":3361,"start2":3361,"length1":16,"length2":17}]],"length":3696,"saved":false}
 {"ts":1370981992520,"patch":[[{"diffs":[[0,"k;\r\n"],[-1,"            case \"±\":\r\n                break;\r\n"],[0,"    "]],"start1":3392,"start2":3392,"length1":55,"length2":8}]],"length":3649,"saved":false}
 {"ts":1370981995001,"patch":[[{"diffs":[[0," {\r\n"],[-1,"            case \"MC\":\r\n                console.log(\"MC\");\r\n                break;\r\n            case \"M+\":\r\n                break;\r\n            case \"M-\":\r\n                break;\r\n            case \"MR\":\r\n                break;\r\n"],[0,"    "]],"start1":3073,"start2":3073,"length1":236,"length2":8}]],"length":3421,"saved":false}
+{"ts":1370983041614,"patch":[[{"diffs":[[0,"lculate("],[-1,"input"],[1,"expression.v"],[0,")));\r\n  "]],"start1":2938,"start2":2938,"length1":21,"length2":28}]],"length":3428,"saved":false}
+{"ts":1370983043240,"patch":[[{"diffs":[[0,"ession.v"],[1,"al()"],[0,")));\r\n  "]],"start1":2950,"start2":2950,"length1":16,"length2":20}]],"length":3432,"saved":false}
+{"ts":1370983048065,"patch":[[{"diffs":[[0,");\r\n"],[-1,"        var input = expression.text().trim();\r\n"],[0,"    "]],"start1":2854,"start2":2854,"length1":55,"length2":8}]],"length":3385,"saved":false}
+{"ts":1370983053994,"patch":[[{"diffs":[[0,"ion."],[-1,"text().trim"],[1,"val"],[0,"();\r"]],"start1":3288,"start2":3288,"length1":19,"length2":11}]],"length":3377,"saved":false}

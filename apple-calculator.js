@@ -97,8 +97,7 @@ function read_term(tokens){
 $(document).ready(function() {
     $('#tallButton').bind('click', function(){
         var expression = $('#expression');
-        var input = expression.text().trim();
-        expression.text(String(calculate(input)));
+        expression.val(String(calculate(expression.val())));
     });
     
     $('.button').bind('click',function() {
@@ -111,8 +110,8 @@ $(document).ready(function() {
                 break;
             default:
                 var expression = $('#expression');
-                var input = expression.text().trim();
-                expression.text(input.concat(func));
+                var input = expression.val();
+                expression.val(input.concat(func));
         }
     });
 });
