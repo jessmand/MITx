@@ -1,0 +1,61 @@
+/* Stylesheet for calculator */
+h1 {
+    font-size: 48px;
+    text-align: center;
+}
+
+.calculator {
+    font-size: 24px;
+    
+}
+
+.calculator button {
+    border-top: 1px solid #84a999;
+   background: #a8c2b7;
+   background: -webkit-gradient(linear, left top, left bottom, from(#65628d), to(#a8c2b7));
+   background: -webkit-linear-gradient(top, #65628d, #a8c2b7);
+   background: -moz-linear-gradient(top, #65628d, #a8c2b7);
+   background: -ms-linear-gradient(top, #65628d, #a8c2b7);
+   background: -o-linear-gradient(top, #65628d, #a8c2b7);
+   padding: 11px 22px;
+   -webkit-border-radius: 10px;
+   -moz-border-radius: 10px;
+   border-radius: 10px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 18px;
+   font-family: Georgia, serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+   
+.calculator button:hover {
+   border-top-color: #62758d;
+   background: #62758d;
+   color: #ccc;
+   }
+.calculator button:active {
+   border-top-color: #65628d;
+   background: #65628d;
+   }
+
+.calculator input[type="text"] {
+    font-size: 24px;
+    padding: 10px;
+    margin: 10px;
+    border-radius:5px;
+}
+
+.calculator .output {
+    background-color: rgb(98, 122, 143);
+    border-color:lightgray;
+    border-radius:5px;
+    border-width:1px;
+    height:50px;
+    padding-left:15px;
+    padding-right:15px;
+    line-height:50px;
+}

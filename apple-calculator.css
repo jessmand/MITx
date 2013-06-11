@@ -1,0 +1,59 @@
+#container {
+    width:424px;
+    height:518px;
+    background:lightgray;
+    position:absolute;
+    font-family: "Verdana";
+    
+}
+
+#screen {
+    width: 324px;
+    height: 88px;
+    position:relative;
+    text-align:right;
+    margin:10px 25px;
+    margin-bottom: 22.5px;
+    background-color: #F0FBC8;
+    border-radius: 5px;
+    font-size:28px;
+    font-weight:600;
+    padding-right:50px;
+    line-height:35px;
+}
+
+.row {
+    position: relative;
+    text-align:center;
+}
+
+.button {
+    width: 90px;
+    height:55px;
+    border-radius: 10px;
+    margin: 4px 2.5px;
+    font-size: 28px;
+    font-weight:550;
+}
+
+#bigRow {
+    
+}
+
+#leftColumn {
+    float:left;
+    margin-left:15px;
+}
+
+#rightColumn {
+    float:right;
+    margin-right:15px;
+}
+
+#wideButton {
+    width:190px;
+}
+
+#tallButton {
+    height:120px;
+}

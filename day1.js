@@ -89,7 +89,7 @@ function evaluate(tokens) {
 
 function setup_calc(div) {
     var input = $('<input></input>',{type: "text", size: 50});
-    var output = $('<div></div>');
+    var output = $('<div></div>', {class: "output"});
     var button = $('<button>Calculate</button>');
     button.bind('click', function(){
         output.text(String(calculate(input.val())));
