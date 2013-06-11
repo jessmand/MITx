@@ -104,7 +104,7 @@ $(document).ready(function() {
         var func = $(this).html();
         switch (func) {
             case "C":
-                $('#expression').text("");
+                $('#expression').val("");
                 break;
             case "=":
                 break;
