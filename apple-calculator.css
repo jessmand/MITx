@@ -1,12 +1,12 @@
 #calculator {
-    width:424px;
+    width:875px;
     height:518px;
     position:absolute;
     font-family: "Verdana";
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(223,223,223,1)), color-stop(25%,rgba(180,180,180,1)), color-stop(54%,rgba(180,180,180,1)), color-stop(100%,rgba(180,180,180,1)));
 }
 
-#screen {
+.screen {
     width: 364px;
     height: 88px;
     margin:15px 25px 20px 25px;
@@ -17,7 +17,7 @@
     -webkit-box-shadow: inset 0 3px 8px #AFB592, 0 4px 6px #FFFFFF, -3px -3px 3px #888, 3px -3px 3px #888;
 }
 
-#expression {
+.expression {
     height:88px;
     width:364px;
     line-height:38px;
@@ -31,7 +31,7 @@
     resize:none;
 }
 
-#expression:focus {
+.expression:focus {
     outline:0;
 }
 
@@ -64,24 +64,49 @@
     -webkit-box-shadow: inset 2px 4px 6px #777777;
 }
 
-#leftColumn {
+.leftColumn {
     float:left;
     margin-left:15px;
 }
 
-#rightColumn {
+.rightColumn {
     float:right;
     margin-right:14px;
 }
 
-#wideButton {
-    width:190px;
+.leftColumnMain {
+    float:left;
 }
 
-#tallButton {
+.rightColumnMain {
+    margin:15px 25px 20px 25px;
+    float:right;
+}
+
+
+.tallButton {
     height:120px;
 }
 
-#period {
+.wideButton {
+    width:190px;
+    margin-top:10px;
+}
+
+.period {
     font-weight:bold;
+}
+
+.inputBox {
+    background-color: #F0FBC8;
+    -webkit-box-shadow: inset 0 3px 8px #AFB592, 0 4px 6px #FFFFFF, -3px -3px 3px #888, 3px -3px 3px #888;
+    border: none;
+    font-family: "Verdana";
+    resize:none;
+    text-shadow: 0px 1px 0px #747474;
+    width:140px;
+}
+
+.inputBox:focus {
+    outline:0;
 }

@@ -23,8 +23,8 @@ var graphcalc = (function () {
 			$(div).find('.errorWindow').text('Max should be greater than min');
 			return;
 		}
-		var increment = (max-min)/250;
-		var xScale = 500/(max-min)
+		var increment = (max-min)/190;
+		var xScale = 190/(max-min)
 		var xValues = [];
 		var yValues = [];
 		i=min;
@@ -39,22 +39,16 @@ var graphcalc = (function () {
 		if (range<1) {
 			range+=1;
 		}
-		var yScale = 480/(range);
-		ctx.moveTo(0,490-(yValues[0]-minY)*yScale);
+		var yScale = 360/(range);
+		ctx.moveTo(0,370-(yValues[0]-minY)*yScale);
 		i=1;
 		while (i<249) {
-			ctx.lineTo(i*2,490-(yValues[i]-minY)*yScale);
-			console.log(i*2,490-(yValues[i]-minY)*yScale);
+			ctx.lineTo(i*2,370-(yValues[i]-minY)*yScale);
 			i++;
 			
 		}
 		ctx.stroke();
-		
-		/*
-		if (minY<=0) {
-			ctx.beginPath()
-			if (Math.abs(maxY)>Math.abs(minY)) {
-		/*		
+			
 			
 		
     }
@@ -64,7 +58,7 @@ var graphcalc = (function () {
         // to call graph() with the appropriate arguments in response to a click
         // of the Plot button … 
 		var graphCanvas = $('<canvas width="500" height="500" class="graphCanvas"></canvas>');
-		var commandBox = $('<div></div>', {'id':'commandBox'});
+		var commandBox = $('<div></div>', {'class':'commandBox'});
 		var equationLabel = $('<label>y =</label>', {'for':'equation','id':'equationLabel'});
 		var equation = $('<input></input>', {type:'text',class:'equation'});
 		var minLabel = $('<label>min:</label>', {for:'min',id:'minLabel'});
@@ -81,6 +75,7 @@ var graphcalc = (function () {
 		});
     }
     exports.setup = setup;
+    exports.graph = graph;
    
     return exports;
 }());

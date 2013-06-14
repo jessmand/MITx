@@ -1,18 +1,10 @@
 .graphCanvas {
-	width:500px;
-	height:500px;
-	float:left;
-	border: black solid 1px;
-	background-color: #EEEEEE;
-	margin:10px;
+	width:380px;
+	height:380px;
+    margin:0px;
+    margin-bottom:15px;
 }
 
-#commandBox {
-	width: 200px;
-	height:500px;
-	float:right;
-	padding:10px;
-}
 
 .graphcalc {
 	width: 744px;

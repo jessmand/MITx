@@ -3,18 +3,22 @@
 <head>
     
     <link href="apple-calculator.css" rel="stylesheet"></link>
+    <link href="graphcalc.css" rel="stylesheet"></link>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script> 
     <script src="apple-calculator.js"></script>
-    
+    <script src="graphcalc.js"></script>
+    <script src="calculator.js"></script>
+    <script src="http://web.mit.edu/6.mitx/www/calculator.js"></script>
     
 </head>
 
 <body>
     
     <div id="calculator">
+        <div class="leftColumnMain">
         <div class="row">
-            <div id="screen">
-                <textarea spellcheck=false id="expression"></textarea>
+            <div class="screen">
+                <textarea spellcheck=false class="expression"></textarea>
             </div>
         </div>
         <div class="row">
@@ -42,19 +46,29 @@
             <button class="button">+</button>
         </div>
         <div id="bigRow">
-            <div id="leftColumn">
+            <div class="leftColumn">
                 <div class="row">
                     <button class="button">1</button>
                     <button class="button">2</button>
                     <button class="button">3</button>
                 </div>
                 <div class="row">
-                    <button id="wideButton" class="button">0</button>
-                    <button class="button" id="period">.</button>
+                    <button class="button">0</button>
+                    <button class="button period">.</button>
+                    <button class="button">x</button>
                 </div>
             </div>
-            <div id="rightColumn">
-                <button id="tallButton" class="button">=</button>
+            <div class="rightColumn">
+                <button class="button tallButton">=</button>
+            </div>
+        </div>
+        </div>
+        <div class="rightColumnMain">
+            <canvas width="380" height="380" class="graphCanvas screen"></canvas>
+            <div class="commandBox">
+                <label class="minLabel">min: <input type="text" class="min inputBox"></input></label>
+                <label class="maxLabel">max: <input type="text" class="max inputBox"></input></label><br>
+                <button class="wideButton button">graph</button>
             </div>
         </div>
     </div>
