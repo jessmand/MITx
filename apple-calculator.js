@@ -8,10 +8,10 @@ $(document).ready(function() {
                 break;
             case "=":
                 var expression = $('.expression');
-                expression.val(String(calculator.evaluate(calculator.parse(expression.val().replace("\xD7","*").replace("\xF7","/"), {}))));
+                expression.val(String(calculator.evaluate(calculator.parse(expression.val().replace(/\xD7/g,"*").replace(/\xF7/g,"/"), {}))));
                 break;
             case "graph":
-                graphcalc.graph($('.graphCanvas'), $('.equation').val(), $('.minValue').val(), $('.maxValue').val(), $('.calculator'));
+                graphcalc.graph($('.graphCanvas'), $('.expression').val().replace(/\xD7/g,"*").replace(/\xF7/g,"/"), $('.min').val(), $('.max').val(), $('.calculator'));
                 break;
             default:
                 var expression = $('.expression');

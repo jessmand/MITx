@@ -47,7 +47,26 @@ var graphcalc = (function () {
 			i++;
 			
 		}
+        ctx.strokeStyle="#FF0000";
+        ctx.lineWidth=2;
 		ctx.stroke();
+        var currentGraph = ctx.getImageData(0,0,380,380);
+        canvas.mousemove(function(event) {
+            ctx.clearRect(0,0,canvas.width(),canvas.height());
+            ctx.putImageData(currentGraph,0,0);
+            var coordinateX = event.pageX-canvas.offset().left;
+            var coordinateY = event.pageY-canvas.offset().top;
+            ctx.beginPath();
+            ctx.moveTo(coordinateX,0);
+            ctx.lineTo(coordinateX,380);
+            ctx.strokeStyle="#000000";
+            ctx.lineWidth=1;
+            ctx.stroke();
+            var xValue = (coordinateX/xScale+min)/2;
+            var yValue = Math.round(calculator.evaluate(parsedExpression, {x:xValue})*100)/100
+            var yPosition = 370-(yValue-minY)*yScale;
+            ctx.fillText(yValue, coordinateX,yPosition);
+        });
 			
 			
 		
