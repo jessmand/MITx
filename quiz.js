@@ -4,8 +4,6 @@ var quiz = (function() {
     
     var exports = [];
     
-    //structure with question Text, options, solution index
-    var questions = [{"questionText": "Sam thinks that y=2 is going to _____ as x goes from 1-10.", "options": ["increases", "decreases", "goes up then down", "goes down then up"], "solutionIndex":0 }, {"questionText": "What is the capital of Georgia?", "options": ["Savannah", "Atlanta", "Charleston", "Washington DC"], "solutionIndex":1 }, {"questionText": "Who wrote 'Jabberwocky'?", "options": ["Dr. Seuss", "JK Rowling", "Shel Silverstien", "Lewis Carroll"], "solutionIndex":3 }];
     
     var local = false;
     
@@ -25,23 +23,36 @@ var quiz = (function() {
         }
     }
     
-    //input:takes in a question index and a student's answer
-    //output: true if answer is correct
+    var quizLengthReq = $.ajax({ async: false, url:"http://localhost:8080/", data: {func:"getQuizLength"} });
+    var quizLength;
+    quizLengthReq.done(function(msg) {
+        quizLength = parseInt(msg);
+    });
+
     
-    function checkAnswer() {
-        return (questions[currentQuestionIndex].options[questions[currentQuestionIndex].solutionIndex] == answers[currentQuestionIndex]) 
-    }
     
     //displays current quiz question to student
     function displayQuestion() {
         $(".quizQuestion").empty();
-        if (currentQuestionIndex<questions.length) {
-            var currentQuestionDict = questions[currentQuestionIndex];
+        
+        if (currentQuestionIndex<quizLength) {
             
-            var newQuestion = $("<text>"+(currentQuestionIndex+1)+". "+currentQuestionDict.questionText+"</text>");
+            var currentQuestionTextReq = $.ajax({ async: false, url:"http://localhost:8080/", data: {func:"getQuestionText",index:currentQuestionIndex} });
+            var currentQuestionText;
+            currentQuestionTextReq.done(function(msg) {
+                currentQuestionText = String(msg);
+            });
+            
+            var currentQuestionOptionsReq = $.ajax({ async: false, url:"http://localhost:8080/", data: {func:"getQuestionOptions",index:currentQuestionIndex} });
+            var currentQuestionOptions;
+            currentQuestionOptionsReq.done(function(msg) {
+                currentQuestionOptions = JSON.parse(msg);
+            });
+            
+            var newQuestion = $("<text>"+(currentQuestionIndex+1)+". "+currentQuestionText+"</text>");
             var radios = "";
-            for (var q in currentQuestionDict.options) {
-                radios += "<br><input type='radio' name='choice"+currentQuestionIndex+"' value='"+currentQuestionDict.options[q]+"'>"+currentQuestionDict.options[q]+"</input>";
+            for (var q in currentQuestionOptions) {
+                radios += "<br><input type='radio' name='choice"+currentQuestionIndex+"' value='"+currentQuestionOptions[q]+"'>"+currentQuestionOptions[q]+"</input>";
             }
             var answerOptions = $(radios+"<br>");
             var checkButton = $("<button class='checkButton"+currentQuestionIndex+"'>Check</button>");
@@ -49,17 +60,30 @@ var quiz = (function() {
             checkButton.bind("click",finalCheck);
             $(".quizQuestion").append(newQuestion,answerOptions,checkButton,ansDiv);
         } else {
-            $(".quizQuestion").append("Your final score is "+score+"/"+questions.length+".");
-            for (var i=0; i<questions.length;i++) {
+            $(".quizQuestion").append("Your final score is "+score+"/"+quizLength+".");
+            for (var i=0; i<quizLength;i++) {
                 var yourAnswer = answers[i];
-                var correctAnswer = questions[i].options[questions[i].solutionIndex];
-                if (yourAnswer!=correctAnswer) {
-                    $('.quizQuestion').append('<br><br><span class="incorrect">'+(i+1)+'. '+questions[i].questionText+'</span>');
+                
+                var questionTextReq = $.ajax({ async: false, url:"http://localhost:8080/", data: {func:"getQuestionText",index:i} });
+                var questionText;
+                questionTextReq.done(function(msg) {
+                    questionText = String(msg);
+                });
+                
+                
+                var questionAnswerReq = $.ajax({ async: false, url:"http://localhost:8080/", data: {func:"getQuestionAnswer",index:i} });
+                var questionAnswer;
+                questionAnswerReq.done(function(msg) {
+                    questionAnswer = String(msg);
+                });
+
+                if (yourAnswer!=questionAnswer) {
+                    $('.quizQuestion').append('<br><br><span class="incorrect">'+(i+1)+'. '+questionText+'</span>');
                 } else {
-                    $('.quizQuestion').append('<br><br><span class="correct">'+(i+1)+'. '+questions[i].questionText+'</span>');
+                    $('.quizQuestion').append('<br><br><span class="correct">'+(i+1)+'. '+questionText+'</span>');
                 }
                 var breakdown1 = $('<br><text>&nbsp &nbsp Your Answer: '+yourAnswer+'</text>');
-                var breakdown2 = $('<br><text>&nbsp&nbsp Correct Answer: '+correctAnswer+'</text>');
+                var breakdown2 = $('<br><text>&nbsp&nbsp Correct Answer: '+questionAnswer+'</text>');
                 $('.quizQuestion').append(breakdown1,breakdown2);
             }
         }
@@ -74,13 +98,25 @@ var quiz = (function() {
         var ans = $('input[name="choice'+currentQuestionIndex+'"]:checked').val();
         answers.push(ans);
         $('.checkButton'+currentQuestionIndex).remove();
-        if (checkAnswer(ans)) {
-            incrementScore();
+        var checkAnsReq = $.ajax({ async: false, url:"http://localhost:8080/", data: {index:currentQuestionIndex, answer:ans, func:"checkAnswer"} });
+        var checkAns;
+        checkAnsReq.done(function(msg) {
+            checkAns = msg;
+        });
+        
+        if (checkAns=="true") {
+            
+            
+            var incrementScoreReq = $.ajax({ async: false, url:"http://localhost:8080/", data: {score:score, func:"incrementScore"} });
+            incrementScoreReq.done(function(msg) {
+                score = parseInt(msg);
+            });
+            
             $('.answerDiv'+currentQuestionIndex).append("Correct<br>");
         } else {
             $('.answerDiv'+currentQuestionIndex).append("Incorrect<br>");
         }
-        if (currentQuestionIndex < questions.length-1) { 
+        if (currentQuestionIndex < quizLength-1) { 
             var nextButton = $('<button>Next Question</button>');
         } else {
             var nextButton = $('<button>Results</button>');
@@ -174,9 +210,5 @@ $(document).ready(function() {
     
     quiz.setup();
     
-    var req = $.ajax({ async: false, url:"http://localhost:8080/", data: {id:10} });
-    req.done(function(msg) {
-        console.log(msg);
-    });
     
 });
