@@ -53,6 +53,10 @@ background: #999999;
   width:100%;
 }
 
+.login-input > form > .control-group > .control-label {
+    width:60px;
+}
+
 .carousel-container {
   height:400px;
 }
@@ -74,10 +78,6 @@ background: #999999;
     margin-left:0px !important;
 }
 
-.width-hundred {
-    width:100px !important;
-}
-
 .little-bottom-margin {
     margin-bottom:5px !important;
 }
@@ -87,4 +87,8 @@ input[type=text]:focus, input[type=password]:focus{
       -moz-box-shadow: 0px 0px 6px #602168;
       -webkit-box-shadow: 0px 0px 6px #602168;
       box-shadow: 0px 0px 6px #602168;
+}
+
+h1 {
+    color:#999999;
 }
