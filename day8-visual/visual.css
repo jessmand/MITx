@@ -8,6 +8,15 @@
 }
 
 .chart text {
-    fill: white;
     font: 10px sans-serif;
+    fill: #CCCCCC
+    
+}
+
+.chart line {
+    stroke: #CCCCCC;
+}
+
+.chart .bar-label {
+    fill: #FFFFFF;
 }
