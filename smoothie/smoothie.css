@@ -100,3 +100,7 @@
 .selected{
     background-color: gray;
 }
+
+#yourName, #smoothieName {
+    margin-bottom: 0px;
+}

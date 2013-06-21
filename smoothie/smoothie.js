@@ -4,19 +4,22 @@ var smoothieBlender = (function() {
     
     
     var originalYumminess = {apple: 4, banana: 7, blueberry: 9, cherry: 3, grape: 3, lemon: 2, lime: 2, mango: 8, orange: 7, peach: 5, pear: 4, pineapple: 5, raspberry: 7, strawberry: 9};
+    var fruitNames = ["apple", "banana", "blueberry", "cherry", "grape", "lemon", "lime", "mango", "orange", "peach", "pear", "pineapple", "raspberry","strawberry"];
     
     //names of fruit
     var fruitArray = {apple:[originalYumminess.apple, 1.5, "#E2342D", "sweet", "chunky", "conventional"], banana:[originalYumminess.banana, .5, "#FFE971", "sweet", "smooth", "tropical"], blueberry:[originalYumminess.blueberry, 2, "#6897FF", "sweet", "chunky", "conventional"], cherry:[originalYumminess.cherry, 3, "#FF3233", "sweet", "chunky", "conventional"], grape:[originalYumminess.grape, 4, "#B171CB", "sweet", "chunky", "conventional"], lemon:[originalYumminess.lemon, .25, "#FFEF1D", "sour", "smooth", "conventional"], lime:[originalYumminess.lime, .5, "#7AC50D", "sour", "smooth", "conventional"], mango:[originalYumminess.mango, 6, "#FFF03F", "sweet", "smooth", "tropical"], orange:[originalYumminess.orange, 1, "#F6A122", "sweet", "smooth", "tropical"], peach:[originalYumminess.peach, 2, "#FFC77B", "sweet", "smooth", "conventional"], pear:[originalYumminess.pear, 1, "#DDE551", "sweet", "chunky", "conventional"], pineapple:[originalYumminess.pineapple, 2, "#FFDA08", "sweet", "chunky", "tropical"], raspberry:[originalYumminess.raspberry, 1.5, "#EC3414", "sour", "chunky", "conventional"], strawberry:[originalYumminess.strawberry, 7, "#EA3927", "sweet", "smooth", "conventional"]};
     
-    var data = [];
+    var dataCost = [];
     var fruits = [];
     var fruitYums = [];
     var fruitColors = [];
+     var bubbleSound = new Audio("bubble_pop.mp3");
+    var splatSound = new Audio("splat.mp3");
     
     //maximum price set by user
     var price = 0;
     
-    var scenarios = [{text: "red fruits are poisonous", fruit:["apple", "cherry", "raspberry", "strawberry"], effect:"none"}, {text: "you're low on vitamin c! use an orange", fruit:["orange"], effect:"req"}, {text: "limes are extra expensive today", fruit:["lime"], effect:"expensive"}];
+    var scenarios = [{text: " is poisonous", fruit:[], effect:"none"}, {text: " is necessary to fend off a vitamin deficiency today", fruit:[], effect:"req"}, {text: " is extra expensive today", fruit:[], effect:"expensive"}, {text:" is on sale!",fruit:[],effect:"cheap"}, {text:" is gross and rotten today!",fruit:[],effect:"gross"}];
     
     //make cost pretty
     function monify(cost) {
@@ -130,16 +133,40 @@ var smoothieBlender = (function() {
     }
     
     function newScenario() {
-        var rand1 = Math.floor(Math.random()*scenarios.length);
-        var rand2 = Math.floor(Math.random()*scenarios.length);
+        var randomScenarioNums = makeThreeRandomNums(scenarios.length);
+        var randomFruitNums = makeThreeRandomNums(Object.keys(fruitArray).length);
+
+        var newScenarioChoices = [];
+        
+        for(var j = 0; j<scenarios.length; j++){
+            newScenarioChoices.push({});
+            for (var k in scenarios[j]) {
+                newScenarioChoices[j][k] = scenarios[j][k];
+            }
+        }
+        var chosenScenarios = [];
+        
+        for(var i = 0; i < 3; i++){
+            //newScenarioChoices.push(scenarios[randomScenarioNums[i]]);
+            newScenarioChoices[randomScenarioNums[i]].text = fruitNames[randomFruitNums[i]] + scenarios[randomScenarioNums[i]].text;
+            newScenarioChoices[randomScenarioNums[i]].fruit = [fruitNames[randomFruitNums[i]]];
+            chosenScenarios.push(newScenarioChoices[randomScenarioNums[i]]);
+        }
+        
+        return chosenScenarios;
+    }
+    
+    function makeThreeRandomNums(listLength){
+        var rand1 = Math.floor(Math.random()*listLength);
+        var rand2 = Math.floor(Math.random()*listLength);
         while (rand1 == rand2) {
-            rand2 = Math.floor(Math.random()*scenarios.length);
+            rand2 = Math.floor(Math.random()*listLength);
         }
-        var rand3 = Math.floor(Math.random()*scenarios.length);
+        var rand3 = Math.floor(Math.random()*listLength);
         while (rand1 == rand3 || rand2 == rand3) {
-            rand3 = Math.floor(Math.random()*scenarios.length);
+            rand3 = Math.floor(Math.random()*listLength);
         }
-        return [scenarios[rand1], scenarios[rand2], scenarios[rand3]];
+        return [rand1,rand2,rand3]
     }
     
     function newSmoothie(fruitsSpan, smoothieSpan) {
@@ -218,14 +245,18 @@ var smoothieBlender = (function() {
         addFruitList();
         addSmoothieList();
         $( "#fruits" ).sortable({
-          connectWith: ".connectedSortable", handle: "img", update: updateStatus, revert: 250
+          connectWith: ".connectedSortable", handle: "img", update: updateStatus, receive: playBubble, revert: 250
         }).disableSelection();
         $( "#smoothie" ).sortable({
           connectWith: ".connectedSortable", handle: "img", update: updateStatus, receive: checkReceive, revert: 250
         }).disableSelection();
     }
     
-    function checkReceive() {
+    function playBubble() {
+        bubbleSound.play();
+    }
+    
+     function checkReceive() {
         var smoothieFruits = $(".smoothieSpan").find(".fruit-tile");
         var totalCost = 0;
         smoothieFruits.each(function() {
@@ -235,6 +266,10 @@ var smoothieBlender = (function() {
             newAlert("don't go over your max cost!");
             $('.connectedSortable').sortable("cancel");
         }
+        else{        
+            // buffers automatically when created
+            playBubble();
+        }
     }
     
     function updateStatus() {
@@ -242,7 +277,7 @@ var smoothieBlender = (function() {
         var totalCost = 0;
         var totalYums = 0;
         
-        data = [];
+        dataCost = [];
         fruits = [];
         fruitYums = [];
         fruitColors = [];
@@ -250,7 +285,7 @@ var smoothieBlender = (function() {
         smoothieFruits.each(function() {
             totalCost += parseFloat($(this).attr("data-cost"));
             totalYums += parseInt($(this).attr("data-yumminess"));
-            data.push([{y:parseFloat($(this).attr("data-cost"))}]);
+            dataCost.push([{y:parseFloat($(this).attr("data-cost"))}]);
             fruits.push($(this).attr("data-name"));
             fruitYums.push($(this).attr("data-yumminess"));
             fruitColors.push($(this).attr("data-color"));
@@ -269,7 +304,7 @@ var smoothieBlender = (function() {
         var maxPrice = $("#hungerSlider").slider("value");
         var outer_width = parseInt($(".statusSpan").css("width"))-38;
         var outer_height = 300;
-        
+          
         var margin = { top: outer_width/8, right: outer_width/8, bottom: outer_width/8, left: outer_width/8 }
         var chart_width = outer_width - margin.left - margin.right;
         var chart_height = outer_height -margin.top - margin.bottom;
@@ -278,11 +313,11 @@ var smoothieBlender = (function() {
         
         var chart = d3.select(".chart-container").append("svg").attr("class","chart").attr("height", outer_height).attr("width",outer_width).append("g").attr("transform","translate(" + (margin.left+margin.right) + "," + (margin.top + margin.bottom -5)+ ")");
             
-        chart.selectAll(".y-scale-label").data(y_scale.ticks(4)).enter().append("text").attr("class", "y-scale-label").attr("x",0).attr('y',y_scale).attr("text-anchor","end").attr("dy","0.3em").attr("dx",-margin.left/2).text(function(d){return d/maxPrice*100 + "%"});
+        chart.selectAll(".y-scale-label").data(y_scale.ticks(4)).enter().append("text").attr("class", "y-scale-label").attr("x",margin.left/2).attr('y',y_scale).attr("text-anchor","end").attr("dy","0.3em").attr("dx",-margin.left/2).text(function(d){return d/maxPrice*100 + "%"});
         
-        if(data.length>0){
+        if(dataCost.length>0){
             var stack = d3.layout.stack();
-            var stacked_data = stack(data);
+            var stacked_data = stack(dataCost);
 
             var color_scale = function(index){
                 return fruitColors[index];
@@ -292,13 +327,10 @@ var smoothieBlender = (function() {
             
             var rects = layer_groups.selectAll('rect').data(function(d){return d}).enter().append('rect').attr("x",0).attr("y", function(d){return y_scale(d.y0+d.y)}).attr("width", chart_width).attr("height", function(d){ return y_scale(d.y0) - y_scale(d.y0+d.y); }).style("fill", function(d, i, j) { return color_scale(j);});
             
-            var label_groups = chart.selectAll(".label").data(stacked_data).enter().append("g").attr("class", "label");
+            var label_groups = chart.selectAll(".container-fluid").data(stacked_data).enter().append("g").attr("class", "container-fluid");
             
-            label_groups.selectAll(".bar-label").data(function(d){return d;}).enter().append("text").attr("class", "bar-label").attr("x",chart_width/2).attr("y", function(d){return y_scale(d.y0+d.y/2);}).attr("text-anchor", "middle").text(function(d,i,j){return fruits[j] + ": $"+d.y+", "+fruitYums[j]+" yums";});
-            
+            label_groups.selectAll(".row-fluid").data(function(d){return d;}).enter().append("text").attr("class", "row-fluid").attr("x",chart_width/2).attr("y", function(d){return y_scale(d.y0+d.y/2);}).attr("text-anchor", "middle").text(function(d,i,j){return fruits[j] + ": $"+d.y+", "+fruitYums[j]+" yums";});
         }
-        
-      }
     
     $(window).resize(function() {
         $("#smoothie").css("height", $("#fruits").css("height"));
@@ -320,8 +352,11 @@ var smoothieBlender = (function() {
         }
     
     }
+      }
     
     function newAlert(warningText) {
+         // buffers automatically when created
+        splatSound.play();
         $(".alertRow").append($('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button>'+warningText+'</div>'))
     
     }
@@ -333,8 +368,73 @@ var smoothieBlender = (function() {
     function blendSmoothie() {
         if ($('#smoothie').length==0) {
             newAlert("you don't have a smoothie to blend yet! try clicking 'blend new.'");
+        } else if ($('#smoothie').find("img").length == 0) {
+            newAlert("you don't have any fruits in your smoothie! try dragging a few over to the right side.");
+        } else {
+            var myModal = $("#myModal");
+            
+            var smoothieFruits = []
+            $('#smoothie').find("img").each(function() {
+                smoothieFruits.push($(this).attr("data-name"));
+            });
+            smoothieFruits = smoothieFruits.join(", ");
+            
+            var nameModalHeader = $("<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times</button><h3 id='modalLabel'>submit your smoothie</h3>");
+            myModal.find(".modal-header").empty().append(nameModalHeader);
+            
+            var totalYumsModal = $("<div class='totalYumsModal'>total yumminess: "+$(".totalYums").text()+"</div>");
+            var totalCostModal = $("<div class='totalCostModal'>total cost: "+$(".totalCost").text()+"</div>");
+            var maxCostModal = $("<div class='maxCostModal'>max cost: "+$(".maxCost").text()+"</div>");
+            var smoothieFruitsModal = $("<div class='smoothieFruitsModal'>"+smoothieFruits+"</div>");
+            var yourNameInput = $("<label>your name: <input type='text' id='yourName' placeholder='sally mcfruit'></input></label>");
+            var smoothieNameInput = $("<label>smoothie name: <input type='text' id='smoothieName' placeholder='orange you excited'></input></label>");
+            myModal.find(".modal-body").empty().append(totalYumsModal, totalCostModal, maxCostModal, smoothieFruitsModal, yourNameInput, smoothieNameInput);
+            
+            
+            var nameSubmitButton = $("<button class='btn nameSubmitButton'>submit</button>");
+            myModal.find(".modal-footer").empty().append(nameSubmitButton);
+            nameSubmitButton.on("click", {smoothieFruits: smoothieFruits}, hiscores);
+            
+            myModal.modal("toggle");
+            
         }
+        
     }
+    
+    function hiscores(event) {
+        Parse.initialize("72XtL5Qay3zRedQynyMb4Qz3rCUdV6xh5zh88aO0", "0s6AR9o8TBb1VoRDi5xCBu2rfg8dGPW7FxxYgnpW");
+        var Smoothie = Parse.Object.extend("Smoothie");
+        var newSmoothie = new Smoothie();
+        newSmoothie.set("yourName", $("#yourName").val());
+        newSmoothie.set("smoothieName", $("#smoothieName").val());
+        newSmoothie.set("totalYums", $(".totalYums").text());
+        newSmoothie.set("totalCost", $(".totalCost").text());
+        newSmoothie.set("maxCost", price);
+        newSmoothie.set("fruits", event.data.smoothieFruits);
+        newSmoothie.save();
+        
+        var myModal = $("#myModal");
+        var modalHeader = myModal.find(".modal-header");
+        var modalBody = myModal.find(".modal-body");
+        var modalFooter = myModal.find(".modal-footer");
+        
+        var hiscoreModalHeader = $("<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times</button><h3 id='modalLabel'>hiscores</h3>");
+        modalHeader.empty().append(hiscoreModalHeader);
+        
+        var costSlider = $("<div id='hiscorePriceSlider'></div>")
+        generateHiscoreTable(price);
+        modalBody.empty().append(costSlider);
+        
+        $("#costSlider").slider({min: 2, max: 20, value: price, slide: generateHiscoreTable, change: generateHiscoreTable});
+        
+        var hiscoreCloseButton = $('<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>');
+        modalFooter.empty().append(hiscoreCloseButton);
+    }
+    
+    function generateHiscoreTable(price) {
+    }
+    
+    
     
     //setup structure of app
     function setup(div) {
@@ -367,6 +467,15 @@ var smoothieBlender = (function() {
         mainContainer.append(dragAndDropRow);
         div.append(mainContainer);
         
+ 
+        var smoothieModal = $("<div id='myModal' class='modal hide fade' tabindex='-1' role='dialog' aria-labelledby='modalLabel' aria-hidden='true'></div>");
+        var modalHeader = $("<div class='modal-header'></div>");
+        var modalBody = $("<div class='modal-body'></div>");
+        var modalFooter = $("<div class='modal-footer'></div>");
+        smoothieModal.append(modalHeader, modalBody, modalFooter);
+        div.append(smoothieModal);
+        
+        
         
         
         $("#sweetnessSlider, #smoothnessSlider, #tropicalitySlider").slider({min: 1, max: 10, value: 5});
@@ -390,6 +499,8 @@ var smoothieBlender = (function() {
         $(".blueSlider").find(".ui-slider-handle").css("border", "1px solid blue");
         $(".swatch").css("height", (parseInt($(".redSlider").css("height").substring(0, $(".redSlider").css("height").indexOf("p")))-10)+"px");
         $(".blendSmoothieButton").on("click",blendSmoothie);
+        
+        newAlert("to begin mixing your smoothie, set your preferences above then click 'new smoothie.' drag and drop the fruits you want in your smoothie to the right side. be careful not to go over your max cost!")
     };
     
     exports.setup = setup;
