@@ -9,18 +9,22 @@ var smoothieBlender = (function() {
     //names of fruit
     var fruitArray = {apple:[originalYumminess.apple, 1.5, "#E2342D", "sweet", "chunky", "conventional"], banana:[originalYumminess.banana, .5, "#FFE971", "sweet", "smooth", "tropical"], blueberry:[originalYumminess.blueberry, 2, "#6897FF", "sweet", "chunky", "conventional"], cherry:[originalYumminess.cherry, 3, "#FF3233", "sweet", "chunky", "conventional"], grape:[originalYumminess.grape, 4, "#B171CB", "sweet", "chunky", "conventional"], lemon:[originalYumminess.lemon, .25, "#FFEF1D", "sour", "smooth", "conventional"], lime:[originalYumminess.lime, .5, "#7AC50D", "sour", "smooth", "conventional"], mango:[originalYumminess.mango, 6, "#FFF03F", "sweet", "smooth", "tropical"], orange:[originalYumminess.orange, 1, "#F6A122", "sweet", "smooth", "tropical"], peach:[originalYumminess.peach, 2, "#FFC77B", "sweet", "smooth", "conventional"], pear:[originalYumminess.pear, 1, "#DDE551", "sweet", "chunky", "conventional"], pineapple:[originalYumminess.pineapple, 2, "#FFDA08", "sweet", "chunky", "tropical"], raspberry:[originalYumminess.raspberry, 1.5, "#EC3414", "sour", "chunky", "conventional"], strawberry:[originalYumminess.strawberry, 7, "#EA3927", "sweet", "smooth", "conventional"]};
     
-    var dataCost = [];
-    var fruits = [];
-    var fruitYums = [];
-    var fruitColors = [];
+    var dataCost;
+    var fruits;
+    var fruitYums;
+    var fruitColors;
+    var dataYums;
      var bubbleSound = new Audio("bubble_pop.mp3");
     var splatSound = new Audio("splat.mp3");
     
     //maximum price set by user
     var price = 0;
     
-    var scenarios = [{text: " is poisonous", fruit:[], effect:"none"}, {text: " is necessary to fend off a vitamin deficiency today", fruit:[], effect:"req"}, {text: " is extra expensive today", fruit:[], effect:"expensive"}, {text:" is on sale!",fruit:[],effect:"cheap"}, {text:" is gross and rotten today!",fruit:[],effect:"gross"}];
+    var Smoothie;
     
+    var scenarios = [{text: " is poisonous!", fruit:[], effect:"none"}, {text: " is necessary to fend off a vitamin deficiency today.", fruit:[], effect:"req"}, {text: " is extra expensive today.", fruit:[], effect:"expensive"}, {text:" is on sale!",fruit:[],effect:"cheap"}, {text:" is gross and rotten today!",fruit:[],effect:"gross"}];
+    
+    var newScenarios;
     //make cost pretty
     function monify(cost) {
         var monifiedCost = cost;
@@ -169,10 +173,25 @@ var smoothieBlender = (function() {
         return [rand1,rand2,rand3]
     }
     
+    function scenarioEffect(situation){
+        if(situation.effect == "gross"){
+           fruitArray[situation.fruit][0] = Math.round((0.5)*fruitArray[situation.fruit][0]*100)/100;
+        }
+        if(situation.effect == "expensive"){
+           fruitArray[situation.fruit][1] = Math.round((1.5)*fruitArray[situation.fruit][1]*100)/100;
+        }
+        if(situation.effect == "cheap"){
+           fruitArray[situation.fruit][1] = Math.round((0.5)*fruitArray[situation.fruit][1]*100)/100;
+        }
+    }
+    
     function newSmoothie(fruitsSpan, smoothieSpan) {
-        var newScenarios = newScenario();
+        newScenarios = newScenario();
         $('.scenarioDiv').empty();
         $('.scenarioDiv').append("<br>"+newScenarios[0].text+"<br>"+newScenarios[1].text+"<br>"+newScenarios[2].text);
+
+        $(".totalCost").text(monify(0));
+        $(".totalYums").text(0);
         
         var sweetness = 5-$('#sweetnessSlider').slider("value");
         var smoothness = 5-$('#smoothnessSlider').slider("value");
@@ -240,23 +259,43 @@ var smoothieBlender = (function() {
                 fruitArray[fruit][0] = fruitArray[fruit][0]+1;
             }
         }
-        
+                
+        for(var i = 0; i<newScenarios.length; i++){
+            scenarioEffect(newScenarios[i]);
+        }       
         
         addFruitList();
         addSmoothieList();
+        
         $( "#fruits" ).sortable({
           connectWith: ".connectedSortable", handle: "img", update: updateStatus, receive: playBubble, revert: 250
         }).disableSelection();
         $( "#smoothie" ).sortable({
           connectWith: ".connectedSortable", handle: "img", update: updateStatus, receive: checkReceive, revert: 250
         }).disableSelection();
+        
+        dataCost = [];
+        dataYums = [];
+        fruits = [];
+        fruitYums = [];
+        fruitColors = [];
+        graph();
     }
     
     function playBubble() {
         bubbleSound.play();
     }
     
-     function checkReceive() {
+     function checkReceive(event, ui) {
+        var notAllowed = false;
+        var scenarioText;
+        for(var i =0; i<newScenarios.length; i++){
+            if(newScenarios[i].fruit[0] == ui.item.find("img").attr("data-name") && newScenarios[i].effect == "none"){
+                notAllowed = true;
+                scenarioText = newScenarios[i].text;
+            }
+        }
+        
         var smoothieFruits = $(".smoothieSpan").find(".fruit-tile");
         var totalCost = 0;
         smoothieFruits.each(function() {
@@ -266,8 +305,11 @@ var smoothieBlender = (function() {
             newAlert("don't go over your max cost!");
             $('.connectedSortable').sortable("cancel");
         }
+        else if(notAllowed){
+            newAlert(scenarioText+"! don't put it in your smoothie!");
+            $('.connectedSortable').sortable("cancel");
+        }
         else{        
-            // buffers automatically when created
             playBubble();
         }
     }
@@ -278,14 +320,16 @@ var smoothieBlender = (function() {
         var totalYums = 0;
         
         dataCost = [];
+        dataYums = [];
         fruits = [];
         fruitYums = [];
         fruitColors = [];
         
         smoothieFruits.each(function() {
             totalCost += parseFloat($(this).attr("data-cost"));
-            totalYums += parseInt($(this).attr("data-yumminess"));
+            totalYums += parseFloat($(this).attr("data-yumminess"));
             dataCost.push([{y:parseFloat($(this).attr("data-cost"))}]);
+            dataYums.push([{y:parseFloat($(this).attr("data-yumminess"))}]);
             fruits.push($(this).attr("data-name"));
             fruitYums.push($(this).attr("data-yumminess"));
             fruitColors.push($(this).attr("data-color"));
@@ -301,7 +345,24 @@ var smoothieBlender = (function() {
     
       function graph(){
         $(".chart-container").empty();
-        var maxPrice = $("#hungerSlider").slider("value");
+        var maxValue;
+        var title;
+        var data;
+          
+        if($(".changeGraph").hasClass("cost")){
+            data = dataCost;
+            maxValue = $("#hungerSlider").slider("value");
+            title = "cost per fruit out of max";
+        }
+        else{
+            data = dataYums;
+            title = "yums per fruit out of total";
+            maxValue = 0;
+            for(var j=0; j< data.length; j++){
+                    maxValue += data[j][0].y;
+            }
+        }  
+    
         var outer_width = parseInt($(".statusSpan").css("width"))-38;
         var outer_height = 300;
           
@@ -309,15 +370,17 @@ var smoothieBlender = (function() {
         var chart_width = outer_width - margin.left - margin.right;
         var chart_height = outer_height -margin.top - margin.bottom;
                 
-        var y_scale = d3.scale.linear().domain([0,maxPrice]).range([chart_height,0]);
+        var y_scale = d3.scale.linear().domain([0,maxValue]).range([chart_height,0]);
         
         var chart = d3.select(".chart-container").append("svg").attr("class","chart").attr("height", outer_height).attr("width",outer_width).append("g").attr("transform","translate(" + (margin.left+margin.right) + "," + (margin.top + margin.bottom -5)+ ")");
             
-        chart.selectAll(".y-scale-label").data(y_scale.ticks(4)).enter().append("text").attr("class", "y-scale-label").attr("x",margin.left/2).attr('y',y_scale).attr("text-anchor","end").attr("dy","0.3em").attr("dx",-margin.left/2).text(function(d){return d/maxPrice*100 + "%"});
+        chart.selectAll(".y-scale-label").data(y_scale.ticks(4)).enter().append("text").attr("class", "y-scale-label").attr("x",margin.left/2).attr('y',y_scale).attr("text-anchor","end").attr("dy","0.3em").attr("dx",-margin.left/2).text(function(d){return Math.round(d/maxValue*100) + "%"});
         
-        if(dataCost.length>0){
+        chart.selectAll(".chart-title").data([1]).enter().append("text").attr("class", "chart-title").attr("x",-10).attr('y',-10).text(title);
+        
+        if(data.length>0){
             var stack = d3.layout.stack();
-            var stacked_data = stack(dataCost);
+            var stacked_data = stack(data);
 
             var color_scale = function(index){
                 return fruitColors[index];
@@ -329,8 +392,11 @@ var smoothieBlender = (function() {
             
             var label_groups = chart.selectAll(".container-fluid").data(stacked_data).enter().append("g").attr("class", "container-fluid");
             
-            label_groups.selectAll(".row-fluid").data(function(d){return d;}).enter().append("text").attr("class", "row-fluid").attr("x",chart_width/2).attr("y", function(d){return y_scale(d.y0+d.y/2);}).attr("text-anchor", "middle").text(function(d,i,j){return fruits[j] + ": $"+d.y+", "+fruitYums[j]+" yums";});
+            label_groups.selectAll(".row-fluid").data(function(d){return d;}).enter().append("text").attr("class", "row-fluid").attr("x",chart_width/2).attr("y", function(d){return y_scale(d.y0+d.y/2);}).attr('dy',".3em").attr("text-anchor", "middle").text(function(d,i,j){if(y_scale(d.y0) - y_scale(d.y0+d.y) < 10){return ""} else{return fruits[j] + ": $"+d.y+", "+fruitYums[j]+" yums";}});
         }
+        
+
+      }
     
     $(window).resize(function() {
         $("#smoothie").css("height", $("#fruits").css("height"));
@@ -352,7 +418,7 @@ var smoothieBlender = (function() {
         }
     
     }
-      }
+      
     
     function newAlert(warningText) {
          // buffers automatically when created
@@ -362,14 +428,33 @@ var smoothieBlender = (function() {
     }
     
     function addStatus(div) {
-        div.append($("<div>total yumminess: <span class='totalYums'>0</span></div><div>total cost: <span class='totalCost'>$0</span></div><button class='btn blendSmoothieButton'>blend smoothie</button><div>max cost: <span class='maxCost'>$0</span></div><div class='chart-container'></div></div>"));
+        div.append($("<div>total yumminess: <span class='totalYums'>0</span></div><div>total cost: <span class='totalCost'>$0</span></div><button class='btn blendSmoothieButton'>blend smoothie</button><div>max cost: <span class='maxCost'>$0</span></div><button class='btn changeGraph cost'>change graph</button><div class='chart-container'></div></div>"));
+        
+
     }
     
     function blendSmoothie() {
+        var missing = false;
+        var scenarioText;
+        for(var i =0; i<newScenarios.length; i++){
+            if(newScenarios[i].effect == "req"){
+                missing = true;
+                scenarioText = newScenarios[i].text;
+                for(var j=0; j<$('#smoothie').find("img").length;j++) {
+                    if ($('#smoothie').find("img").eq(j).attr("data-name") == newScenarios[i].fruit[0]) {
+                        missing = false;
+                    }
+                }
+            }
+        }
+        
+        
         if ($('#smoothie').length==0) {
             newAlert("you don't have a smoothie to blend yet! try clicking 'blend new.'");
         } else if ($('#smoothie').find("img").length == 0) {
             newAlert("you don't have any fruits in your smoothie! try dragging a few over to the right side.");
+        } else if(missing) {
+            newAlert("you can't blend your smoothie yet! "+scenarioText);
         } else {
             var myModal = $("#myModal");
             
@@ -403,35 +488,72 @@ var smoothieBlender = (function() {
     
     function hiscores(event) {
         Parse.initialize("72XtL5Qay3zRedQynyMb4Qz3rCUdV6xh5zh88aO0", "0s6AR9o8TBb1VoRDi5xCBu2rfg8dGPW7FxxYgnpW");
-        var Smoothie = Parse.Object.extend("Smoothie");
-        var newSmoothie = new Smoothie();
-        newSmoothie.set("yourName", $("#yourName").val());
-        newSmoothie.set("smoothieName", $("#smoothieName").val());
-        newSmoothie.set("totalYums", $(".totalYums").text());
-        newSmoothie.set("totalCost", $(".totalCost").text());
-        newSmoothie.set("maxCost", price);
-        newSmoothie.set("fruits", event.data.smoothieFruits);
-        newSmoothie.save();
+        Smoothie = Parse.Object.extend("Smoothie");
+        var newSmoothieHiscore = new Smoothie();
+        newSmoothieHiscore.set("yourName", $("#yourName").val());
+        newSmoothieHiscore.set("smoothieName", $("#smoothieName").val());
+        newSmoothieHiscore.set("totalYums", parseFloat($(".totalYums").text()));
+        newSmoothieHiscore.set("totalCost", $(".totalCost").text());
+        newSmoothieHiscore.set("maxCost", price);
+        newSmoothieHiscore.set("fruits", event.data.smoothieFruits);
+        newSmoothieHiscore.save(null, {success: function() {
+            var myModal = $("#myModal");
+            var modalHeader = myModal.find(".modal-header");
+            var modalBody = myModal.find(".modal-body");
+            var modalFooter = myModal.find(".modal-footer");
+            
+            var hiscoreModalHeader = $("<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times</button><h3 id='modalLabel'>hiscores</h3>");
+            modalHeader.empty().append(hiscoreModalHeader);
+            
+            var sliderLabel = $("<div>Show hiscores for max cost <span class='showMaxCost'>$10.00</span></div>");
+            var costSlider = $("<div id='hiscorePriceSlider'></div>")
+            var hiscoreTableContainer = $("<div id='hiscoreTableContainer'></div>");
+            
+            modalBody.empty().append(sliderLabel,costSlider,hiscoreTableContainer);
+            generateHiscoreTable(price);
+            
+            $("#hiscorePriceSlider").slider({min: 2, max: 20, value: price, slide: generateHiscoreTable, change: generateHiscoreTable});
+            
+            var hiscoreCloseButton = $('<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>');
+            modalFooter.empty().append(hiscoreCloseButton);
+            hiscoreCloseButton.on("click", newSmoothie);
+        }, error: function(error) {
+            $("#myModal").empty().append(error);
+        }
+        });
         
-        var myModal = $("#myModal");
-        var modalHeader = myModal.find(".modal-header");
-        var modalBody = myModal.find(".modal-body");
-        var modalFooter = myModal.find(".modal-footer");
         
-        var hiscoreModalHeader = $("<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times</button><h3 id='modalLabel'>hiscores</h3>");
-        modalHeader.empty().append(hiscoreModalHeader);
-        
-        var costSlider = $("<div id='hiscorePriceSlider'></div>")
-        generateHiscoreTable(price);
-        modalBody.empty().append(costSlider);
-        
-        $("#costSlider").slider({min: 2, max: 20, value: price, slide: generateHiscoreTable, change: generateHiscoreTable});
-        
-        var hiscoreCloseButton = $('<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>');
-        modalFooter.empty().append(hiscoreCloseButton);
     }
     
-    function generateHiscoreTable(price) {
+    function generateHiscoreTable(maxCost) {
+        
+        var hiscoreTable = $("<table class='table table-hover table-striped'></table>");
+        var hiscoreHeader = $("<tr><th>rank</th><th>name</th><th>smoothie name</th><th>total yums</th><th>total cost</th><th>fruits</th></tr>");
+        hiscoreTable.append(hiscoreHeader)
+        
+        if (isNaN(maxCost)) {
+            maxCost = $("#hiscorePriceSlider").slider("value");
+        }
+        $(".showMaxCost").text(monify(maxCost));
+        var smoothieQuery = new Parse.Query(Smoothie);
+        smoothieQuery.equalTo("maxCost", maxCost).descending("totalYums").limit(10);
+        smoothieQuery.find({
+          success: function(results) {
+              $('#myModal').find(".modal-body").find("#hiscoreTableContainer").empty().append(hiscoreTable);
+            // Do something with the returned Parse.Object values
+            for (var i = 0; i < results.length; i++) { 
+                var hiscore = results[i];
+                var hiscoreRow = $("<tr><td>"+(i+1)+"</td><td>"+hiscore.get("yourName")+"</td><td>"+hiscore.get("smoothieName")+"</td><td>"+hiscore.get("totalYums")+"</td><td>"+hiscore.get("totalCost")+"</td><td>"+hiscore.get("fruits")+"</td></tr>");
+                hiscoreTable.append(hiscoreRow);
+            }
+            
+          },
+          error: function(error) {
+            alert("Error: " + error.code + " " + error.message);
+          }
+        });
+        
+        
     }
     
     
@@ -499,6 +621,10 @@ var smoothieBlender = (function() {
         $(".blueSlider").find(".ui-slider-handle").css("border", "1px solid blue");
         $(".swatch").css("height", (parseInt($(".redSlider").css("height").substring(0, $(".redSlider").css("height").indexOf("p")))-10)+"px");
         $(".blendSmoothieButton").on("click",blendSmoothie);
+        $('.changeGraph').on('click', function(){
+            $(this).toggleClass('cost');
+            graph();
+        });
         
         newAlert("to begin mixing your smoothie, set your preferences above then click 'new smoothie.' drag and drop the fruits you want in your smoothie to the right side. be careful not to go over your max cost!")
     };
