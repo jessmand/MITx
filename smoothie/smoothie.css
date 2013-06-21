@@ -1,7 +1,3 @@
-body {
-    font-family: serif;
-}
-
 .connectedSortable { 
     list-style-type: none; 
     margin: 0; 
@@ -27,7 +23,6 @@ body {
 
 .fruit-label {
     font-size: 12px;
-    font-family: serif;
     line-height:15px;
     text-align:center;
 }
@@ -64,4 +59,44 @@ body {
 
 .title {
     text-align:center;
+}
+
+.swatch {
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.chart {
+    background-color: none;
+}
+
+.chart rect {
+    fill: white;
+    stroke: #212121;
+}
+
+.chart text {
+    fill: black;
+    font: 10px sans-serif;
+}
+
+.chart line {
+    stroke: #ccc;
+}
+
+.chart .y-scale-label{
+    fill: #495961;
+}
+
+.line {
+  fill: none;
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
+.transition{
+    background-color: #CACACA;
+}
+.selected{
+    background-color: gray;
 }
