@@ -1,9 +1,25 @@
-<html>
-<head>
-  <title>{{ page.title }}</title>
-</head>
-<body>
-  <h1><a href="/index.html">My First Jekyll-Powered Blog</a></h1>
-  {{ content }}
-</body>
-</html>
+---
+layout: default
+title: Post
+---
+
+<h1><a href="{{page.url}}" title={{page.title}}>{{page.title}}</a></h1>
+    
+      
+        <span class="published_on">
+          Published on {{ page.date | date: "%d %B, %Y"}}
+    
+          
+            in
+            
+            {% for tag in page.tags %}
+            {% if forloop.last %}and {% endif %}
+              <a href="#" class="tag">{{tag}}</a>{% unless forloop.last %}, {% endunless %}
+                
+            
+            {% endfor %}
+            
+          
+         </span>
+       
+              {{ content }}

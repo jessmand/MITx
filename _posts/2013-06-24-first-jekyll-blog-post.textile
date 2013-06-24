@@ -1,5 +1,7 @@
 ---
 layout: post
 title: First Jekyll Blog Post
+important: false
+tags: [first, blog, jekyll]
 ---
 Today I pushed my first blog post to GitHub Pages.
