@@ -1,0 +1,5 @@
+---
+layout: post
+title: First Jekyll Blog Post
+---
+Today I pushed my first blog post to GitHub Pages.
